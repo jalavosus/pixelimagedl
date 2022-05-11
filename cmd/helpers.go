@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"path/filepath"
 	"strings"
 
@@ -13,36 +14,45 @@ func absPath() string {
 	return p
 }
 
-func makeSmallDeviceName(deviceName string) string {
-	return strings.ToLower(strings.ReplaceAll(deviceName, " ", ""))
+func makeCliFlagVal(flagVal string) string {
+	return strings.ToLower(strings.ReplaceAll(flagVal, " ", ""))
 }
 
 func validateImageKind(raw string) (pixelimagedl.DownloadType, bool) {
-	switch strings.ToLower(raw) {
-	case strings.ToLower(pixelimagedl.Factory.String()):
-		return pixelimagedl.Factory, true
-	case strings.ToLower(pixelimagedl.OTA.String()):
-		return pixelimagedl.OTA, true
-	default:
-		return pixelimagedl.Factory, true
-	}
+	return checkFlagVal(allDownloadTypes, raw)
 }
 
 func validateDevice(raw string) (pixelimagedl.Pixel, bool) {
-	raw = strings.ToLower(raw)
-	for _, p := range pixelimagedl.AllPixelNames {
-		if makeSmallDeviceName(p.String()) == raw {
-			return p, true
-		}
+	if pixelName, isPixelName := checkFlagVal(pixelimagedl.AllPixelNames, raw); isPixelName {
+		return pixelName, true
 	}
 
-	for _, c := range pixelimagedl.AllCodenames {
-		if makeSmallDeviceName(c.String()) == raw {
-			return pixelimagedl.DeviceFromCodename(c), true
-		}
+	if codename, isCodename := checkFlagVal(pixelimagedl.AllCodenames, raw); isCodename {
+		return pixelimagedl.DeviceFromCodename(codename), true
 	}
 
 	return pixelimagedl.UnknownDevice, false
 }
 
-var allowedDeviceNames = internal.Map(pixelimagedl.AllDeviceNames, makeSmallDeviceName)
+func checkFlagVal[T fmt.Stringer](allowedVals []T, check string) (T, bool) {
+	var emptyVal T
+
+	check = strings.ToLower(check)
+
+	for _, val := range allowedVals {
+		if makeCliFlagVal(val.String()) == check {
+			return val, true
+		}
+	}
+
+	return emptyVal, false
+}
+
+var (
+	allDownloadTypes     = []pixelimagedl.DownloadType{pixelimagedl.Factory, pixelimagedl.OTA}
+	allowedDeviceNames   = internal.Map(pixelimagedl.AllDeviceNames, makeCliFlagVal)
+	allowedDownloadTypes = internal.Map(
+		[]string{pixelimagedl.Factory.String(), pixelimagedl.OTA.String()},
+		makeCliFlagVal,
+	)
+)

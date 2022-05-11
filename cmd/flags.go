@@ -70,7 +70,7 @@ func parseFlags(c *cli.Context) (ParsedFlags, error) {
 
 	downloadKind, ok := validateImageKind(rawImageKind)
 	if !ok {
-		return parsedFlags, errors.Errorf("invalid download kind %[1]s", rawImageKind)
+		return parsedFlags, errors.Errorf("invalid download kind %[1]s. Allowed values: %[2]s", rawImageKind, strings.Join(allowedDownloadTypes, ", "))
 	}
 
 	downloadTimeout := downloadTimeoutFlag.Get(c)
