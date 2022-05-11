@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/jalavosus/pixelimagedl"
 	"github.com/jalavosus/pixelimagedl/internal"
+	"github.com/jalavosus/pixelimagedl/pkg/pixelimagedl"
 )
 
 func absPath() string {

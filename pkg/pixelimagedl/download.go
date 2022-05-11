@@ -14,6 +14,7 @@ import (
 
 	"github.com/pkg/errors"
 
+	"github.com/jalavosus/pixelimagedl/internal"
 	"github.com/jalavosus/pixelimagedl/pkg/download"
 )
 
@@ -27,7 +28,7 @@ func DownloadLatest(ctx context.Context, device Pixel, downloadType DownloadType
 		return err
 	}
 
-	latest := last(images)
+	latest := internal.SliceLast(images)
 
 	log.Printf("latest stable %[1]s image for %[2]s is %[3]s (%[4]s)\n", downloadType.String(), device.String(), latest.Version, latest.BuildNumber)
 
@@ -36,7 +37,7 @@ func DownloadLatest(ctx context.Context, device Pixel, downloadType DownloadType
 	downloadUri := latest.DownloadURI
 	split := strings.Split(downloadUri, "/")
 
-	filename = last(split)
+	filename = internal.SliceLast(split)
 	if !filepath.IsAbs(outDir) {
 		outDir, err = filepath.Abs(outDir)
 		if err != nil {

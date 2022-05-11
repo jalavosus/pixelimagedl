@@ -1,5 +1,5 @@
 GO=$(shell which go)
-CMD=./cmd
+CMD=./cmd/pixelimagedl
 BIN=./bin
 
 OUT=$(BIN)/main

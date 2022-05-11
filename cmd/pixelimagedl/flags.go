@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/urfave/cli/v2"
 
-	"github.com/jalavosus/pixelimagedl"
+	"github.com/jalavosus/pixelimagedl/pkg/pixelimagedl"
 )
 
 var (

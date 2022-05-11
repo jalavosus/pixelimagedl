@@ -180,8 +180,8 @@ func getBuildMajorMinor(buildNumber string) (int64, int64, string) {
 		extra = split[3]
 	}
 
-	major := parseInt64(majorStr)
-	minor := parseInt64(minorStr)
+	major := internal.ParseInt64(majorStr)
+	minor := internal.ParseInt64(minorStr)
 
 	return major, minor, extra
 }
