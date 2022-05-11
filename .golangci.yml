@@ -1,0 +1,93 @@
+# see: https://golangci-lint.run/usage/configuration/ for config info
+run:
+  # default concurrency is a available CPU number
+#  concurrency: 5
+  # include test files or not, default is true
+  tests: false
+  # timeout for analysis; set high due to the default
+  # 1m timeout sometimes causing failures in CI
+  timeout: 10m
+  skip-dirs-use-default: true
+  allow-parallel-runners: true
+
+output:
+  sort-results: true
+
+linters:
+  disable-all: true
+  enable:
+    - gofmt
+    - govet
+    - unconvert
+    - goimports
+    - ineffassign
+    - whitespace
+    - nolintlint
+    - importas
+    - deadcode
+    - varcheck
+    - gocognit
+    - gocritic
+    - nestif
+    - ifshort
+    - goconst
+    - nlreturn
+    - prealloc
+    - thelper
+    - dupl
+    - unconvert
+    - goconst
+    - errname
+    - nilnil
+    - predeclared
+  fast: false
+
+linters-settings:
+  gofmt:
+    # simplify code: gofmt with `-s` option, true by default
+    simplify: true
+
+  govet:
+    check-shadowing: true
+    enable:
+      - assign
+      - fieldalignment
+      - errorsas
+      - tests
+      - unreachable
+      - framepointer
+      - lostcancel
+      - sigchanyzer
+
+  nlreturn:
+    block-size: 3
+
+  whitespace:
+    multi-if: true
+    multi-func: true
+
+  nolintlint:
+    allow-leading-space: false
+    allow-unused: false
+    require-explanation: false
+    require-specific: false
+
+  importas:
+    errors: github.com/pkg/errors
+
+  goconst:
+    min-len: 5
+    min-occurrences: 3
+    ignore-tests: true
+
+issues:
+  max-issues-per-linter: 15
+  max-same-issues: 0
+  fix: false
+  exclude-rules:
+    # Exclude some linters from running on tests files.
+    - path: _test\.go
+      linters:
+        - gofmt
+        - goimports
+        - govet

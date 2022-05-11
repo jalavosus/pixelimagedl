@@ -40,10 +40,10 @@ var (
 )
 
 type ParsedFlags struct {
-	Device          pixelimagedl.Pixel
-	DownloadType    pixelimagedl.DownloadType
-	DownloadTimeout time.Duration
 	OutDir          string
+	Device          pixelimagedl.Pixel
+	DownloadTimeout time.Duration
+	DownloadType    pixelimagedl.DownloadType
 }
 
 func WithFlags(fn func(*cli.Context, ParsedFlags) error) cli.ActionFunc {

@@ -14,7 +14,7 @@ func absPath() string {
 }
 
 func makeSmallDeviceName(deviceName string) string {
-	return strings.ToLower(strings.Replace(deviceName, " ", "", -1))
+	return strings.ToLower(strings.ReplaceAll(deviceName, " ", ""))
 }
 
 func validateImageKind(raw string) (pixelimagedl.DownloadType, bool) {

@@ -1,10 +1,10 @@
-.PHONY: build clean
-
 GO=$(shell which go)
 CMD=./cmd
 BIN=./bin
 
 OUT=$(BIN)/main
+
+.PHONY: build clean
 
 build : clean
 	$(GO) build -o $(OUT) $(CMD)
@@ -12,6 +12,14 @@ build : clean
 clean :
 	rm -rf $(OUT)
 
+
+.PHONY: lint fmt
+
+lint :
+	golangci-lint run --config=.golangci.yml
+
+fmt :
+	gofmt -s -w ./
 
 .PHONY: mod-download mod-tidy
 
