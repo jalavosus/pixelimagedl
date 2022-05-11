@@ -103,6 +103,7 @@ func parseRows(tableBody *goquery.Selection, downloadType DownloadType) []PixelI
 		imageData := PixelImage{}
 
 		rowData := s.Find("td")
+
 		fullBuild := rowData.First()
 		fullBuildText := fullBuild.Text()
 
@@ -138,14 +139,15 @@ func parseVersionString(buildNum string) (version, buildNumber, buildDate, build
 	version = versionRegex.FindString(buildNum)
 
 	b := buildRegex.FindString(buildNum)
-	b = strings.Replace(b, "(", "", 1)
-	b = strings.Replace(b, ")", "", 1)
+	b = strings.TrimPrefix(b, "(")
+	b = strings.TrimSuffix(b, ")")
 	bSplit := strings.Split(b, ",")
 
 	buildNumber = strings.TrimSpace(bSplit[0])
 	buildDate = strings.TrimSpace(bSplit[1])
 	if len(bSplit) > 2 {
 		buildComment = strings.TrimSpace(strings.Join(bSplit[2:], ", "))
+		buildComment = strings.ReplaceAll(buildComment, "  ", " ")
 	}
 
 	return

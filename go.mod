@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/PuerkitoBio/goquery v1.8.0
+	github.com/k0kubun/pp v2.4.0+incompatible
 	github.com/pkg/errors v0.9.1
 	github.com/schollz/progressbar/v3 v3.8.6
 	github.com/urfave/cli/v2 v2.6.0
@@ -12,6 +13,9 @@ require (
 require (
 	github.com/andybalholm/cascadia v1.3.1 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.1 // indirect
+	github.com/k0kubun/colorstring v0.0.0-20150214042306-9440f1994b88 // indirect
+	github.com/mattn/go-colorable v0.1.9 // indirect
+	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-runewidth v0.0.13 // indirect
 	github.com/mitchellh/colorstring v0.0.0-20190213212951-d06e56a500db // indirect
 	github.com/rivo/uniseg v0.2.0 // indirect
