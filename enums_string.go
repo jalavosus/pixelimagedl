@@ -8,20 +8,20 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
-	_ = x[Pixel4-0]
-	_ = x[Pixel4XL-1]
-	_ = x[Pixel4a-2]
-	_ = x[Pixel4a5G-3]
-	_ = x[Pixel5-4]
-	_ = x[Pixel5a-5]
-	_ = x[Pixel6-6]
-	_ = x[Pixel6Pro-7]
-	_ = x[Unknown-8]
+	_ = x[UnknownDevice-0]
+	_ = x[Pixel4-1]
+	_ = x[Pixel4XL-2]
+	_ = x[Pixel4a-3]
+	_ = x[Pixel4a5G-4]
+	_ = x[Pixel5-5]
+	_ = x[Pixel5a-6]
+	_ = x[Pixel6-7]
+	_ = x[Pixel6Pro-8]
 }
 
-const _Pixel_name = "Pixel 4Pixel 4 XLPixel 4aPixel 4a 5GPixel 5Pixel 5aPixel 6Pixel 6 Prounknown"
+const _Pixel_name = "unknownPixel 4Pixel 4 XLPixel 4aPixel 4a 5GPixel 5Pixel 5aPixel 6Pixel 6 Pro"
 
-var _Pixel_index = [...]uint8{0, 7, 17, 25, 36, 43, 51, 58, 69, 76}
+var _Pixel_index = [...]uint8{0, 7, 14, 24, 32, 43, 50, 58, 65, 76}
 
 func (i Pixel) String() string {
 	if i >= Pixel(len(_Pixel_index)-1) {
@@ -33,19 +33,20 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
-	_ = x[Flame-0]
-	_ = x[Coral-1]
-	_ = x[Sunfish-2]
-	_ = x[Bramble-3]
-	_ = x[Redfin-4]
-	_ = x[Barbet-5]
-	_ = x[Oriole-6]
-	_ = x[Raven-7]
+	_ = x[UnknownCodename-0]
+	_ = x[Flame-1]
+	_ = x[Coral-2]
+	_ = x[Sunfish-3]
+	_ = x[Bramble-4]
+	_ = x[Redfin-5]
+	_ = x[Barbet-6]
+	_ = x[Oriole-7]
+	_ = x[Raven-8]
 }
 
-const _Codename_name = "flamecoralsunfishbrambleredfinbarbetorioleraven"
+const _Codename_name = "unknownflamecoralsunfishbrambleredfinbarbetorioleraven"
 
-var _Codename_index = [...]uint8{0, 5, 10, 17, 24, 30, 36, 42, 47}
+var _Codename_index = [...]uint8{0, 7, 12, 17, 24, 31, 37, 43, 49, 54}
 
 func (i Codename) String() string {
 	if i >= Codename(len(_Codename_index)-1) {

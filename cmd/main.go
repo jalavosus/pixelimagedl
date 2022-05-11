@@ -20,18 +20,21 @@ func absPath() string {
 
 var (
 	downloadTypeFlag = cli.StringFlag{
-		Name:     "type",
+		Name:     "imagetype",
+		Usage:    "`type` of image zip to download (factory or ota)",
 		Aliases:  []string{"t"},
 		Required: false,
 		Value:    pixelimagedl.Factory.String(),
 	}
 	deviceNameFlag = cli.StringFlag{
 		Name:     "device",
+		Usage:    "`name` (or codename) of the device to download an image for",
 		Aliases:  []string{"d"},
 		Required: true,
 	}
 	outDirFlag = cli.PathFlag{
-		Name:     "outDir",
+		Name:     "outdir",
+		Usage:    "`dir`ectory to place downloaded image file in",
 		Aliases:  []string{"o"},
 		Required: false,
 		Value:    absPath(),
@@ -74,42 +77,20 @@ func makeSmallDeviceName(deviceName string) string {
 }
 
 func validateDevice(raw string) (pixelimagedl.Pixel, bool) {
-	switch strings.ToLower(raw) {
-	case makeSmallDeviceName(pixelimagedl.Pixel4.String()):
-		return pixelimagedl.Pixel4, true
-	case makeSmallDeviceName(pixelimagedl.Pixel4XL.String()):
-		return pixelimagedl.Pixel4XL, true
-	case makeSmallDeviceName(pixelimagedl.Pixel4a.String()):
-		return pixelimagedl.Pixel4a, true
-	case makeSmallDeviceName(pixelimagedl.Pixel4a5G.String()):
-		return pixelimagedl.Pixel4a5G, true
-	case makeSmallDeviceName(pixelimagedl.Pixel5.String()):
-		return pixelimagedl.Pixel5, true
-	case makeSmallDeviceName(pixelimagedl.Pixel5a.String()):
-		return pixelimagedl.Pixel5a, true
-	case makeSmallDeviceName(pixelimagedl.Pixel6.String()):
-		return pixelimagedl.Pixel6, true
-	case makeSmallDeviceName(pixelimagedl.Pixel6Pro.String()):
-		return pixelimagedl.Pixel6Pro, true
-	case makeSmallDeviceName(pixelimagedl.Flame.String()):
-		return pixelimagedl.Pixel4, true
-	case makeSmallDeviceName(pixelimagedl.Coral.String()):
-		return pixelimagedl.Pixel4XL, true
-	case makeSmallDeviceName(pixelimagedl.Sunfish.String()):
-		return pixelimagedl.Pixel4a, true
-	case makeSmallDeviceName(pixelimagedl.Bramble.String()):
-		return pixelimagedl.Pixel4a5G, true
-	case makeSmallDeviceName(pixelimagedl.Redfin.String()):
-		return pixelimagedl.Pixel5, true
-	case makeSmallDeviceName(pixelimagedl.Barbet.String()):
-		return pixelimagedl.Pixel5a, true
-	case makeSmallDeviceName(pixelimagedl.Oriole.String()):
-		return pixelimagedl.Pixel6, true
-	case makeSmallDeviceName(pixelimagedl.Raven.String()):
-		return pixelimagedl.Pixel6Pro, true
-	default:
-		return pixelimagedl.Unknown, false
+	raw = strings.ToLower(raw)
+	for _, p := range pixelimagedl.AllPixelNames {
+		if makeSmallDeviceName(p.String()) == raw {
+			return p, true
+		}
 	}
+
+	for _, c := range pixelimagedl.AllCodenames {
+		if makeSmallDeviceName(c.String()) == raw {
+			return pixelimagedl.DeviceFromCodename(c), true
+		}
+	}
+
+	return pixelimagedl.UnknownDevice, false
 }
 
 var allowedDeviceNames = internal.Map(pixelimagedl.AllDeviceNames, makeSmallDeviceName)
@@ -120,7 +101,7 @@ func downloadCmdAction(c *cli.Context) error {
 
 	deviceName, ok := validateDevice(rawDeviceName)
 	if !ok {
-		return errors.Errorf("invalid device name %[1]s.\nAllowed values: %[2]s", rawDeviceName, strings.Join(allowedDeviceNames, ", "))
+		return errors.Errorf("invalid device name %[1]s. Allowed values: %[2]s", rawDeviceName, strings.Join(allowedDeviceNames, ", "))
 	}
 
 	downloadKind, ok := validateImageKind(rawImageKind)

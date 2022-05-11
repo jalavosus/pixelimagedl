@@ -14,27 +14,50 @@ const (
 )
 
 const (
-	Pixel4    Pixel = iota // Pixel 4
-	Pixel4XL               // Pixel 4 XL
-	Pixel4a                // Pixel 4a
-	Pixel4a5G              // Pixel 4a 5G
-	Pixel5                 // Pixel 5
-	Pixel5a                // Pixel 5a
-	Pixel6                 // Pixel 6
-	Pixel6Pro              // Pixel 6 Pro
-	Unknown                // unknown
+	UnknownDevice Pixel = iota // unknown
+	Pixel4                     // Pixel 4
+	Pixel4XL                   // Pixel 4 XL
+	Pixel4a                    // Pixel 4a
+	Pixel4a5G                  // Pixel 4a 5G
+	Pixel5                     // Pixel 5
+	Pixel5a                    // Pixel 5a
+	Pixel6                     // Pixel 6
+	Pixel6Pro                  // Pixel 6 Pro
 )
 
+var AllPixelNames = []Pixel{
+	Pixel4,
+	Pixel4XL,
+	Pixel4a,
+	Pixel4a5G,
+	Pixel5,
+	Pixel5a,
+	Pixel6,
+	Pixel6Pro,
+}
+
 const (
-	Flame   Codename = iota // flame
-	Coral                   // coral
-	Sunfish                 // sunfish
-	Bramble                 // bramble
-	Redfin                  // redfin
-	Barbet                  // barbet
-	Oriole                  // oriole
-	Raven                   // raven
+	UnknownCodename Codename = iota // unknown
+	Flame                           // flame
+	Coral                           // coral
+	Sunfish                         // sunfish
+	Bramble                         // bramble
+	Redfin                          // redfin
+	Barbet                          // barbet
+	Oriole                          // oriole
+	Raven                           // raven
 )
+
+var AllCodenames = []Codename{
+	Flame,
+	Coral,
+	Sunfish,
+	Bramble,
+	Redfin,
+	Barbet,
+	Oriole,
+	Raven,
+}
 
 var deviceCodenameMap = map[Pixel]Codename{
 	Pixel4:    Flame,
@@ -45,6 +68,16 @@ var deviceCodenameMap = map[Pixel]Codename{
 	Pixel5a:   Barbet,
 	Pixel6:    Oriole,
 	Pixel6Pro: Raven,
+}
+
+func DeviceFromCodename(c Codename) Pixel {
+	for k, v := range deviceCodenameMap {
+		if v == c {
+			return k
+		}
+	}
+
+	return UnknownDevice
 }
 
 var AllDeviceNames = []string{
