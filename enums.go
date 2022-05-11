@@ -46,3 +46,22 @@ var deviceCodenameMap = map[Pixel]Codename{
 	Pixel6:    Oriole,
 	Pixel6Pro: Raven,
 }
+
+var AllDeviceNames = []string{
+	Pixel4.String(),
+	Pixel4XL.String(),
+	Pixel4a.String(),
+	Pixel4a5G.String(),
+	Pixel5.String(),
+	Pixel5a.String(),
+	Pixel6.String(),
+	Pixel6Pro.String(),
+	Flame.String(),
+	Coral.String(),
+	Sunfish.String(),
+	Bramble.String(),
+	Redfin.String(),
+	Barbet.String(),
+	Oriole.String(),
+	Raven.String(),
+}

@@ -10,6 +10,7 @@ import (
 	"github.com/urfave/cli/v2"
 
 	"github.com/jalavosus/pixelimagedl"
+	"github.com/jalavosus/pixelimagedl/internal"
 )
 
 func absPath() string {
@@ -68,72 +69,50 @@ func validateImageKind(raw string) (pixelimagedl.DownloadType, bool) {
 	}
 }
 
-type DeviceType interface {
-	pixelimagedl.Pixel | pixelimagedl.Codename
-	String() string
-}
-
-func makeSmallDeviceName[T DeviceType](deviceName T) string {
-	return strings.ToLower(strings.Replace(deviceName.String(), " ", "", -1))
+func makeSmallDeviceName(deviceName string) string {
+	return strings.ToLower(strings.Replace(deviceName, " ", "", -1))
 }
 
 func validateDevice(raw string) (pixelimagedl.Pixel, bool) {
 	switch strings.ToLower(raw) {
-	case makeSmallDeviceName(pixelimagedl.Pixel4):
+	case makeSmallDeviceName(pixelimagedl.Pixel4.String()):
 		return pixelimagedl.Pixel4, true
-	case makeSmallDeviceName(pixelimagedl.Pixel4XL):
+	case makeSmallDeviceName(pixelimagedl.Pixel4XL.String()):
 		return pixelimagedl.Pixel4XL, true
-	case makeSmallDeviceName(pixelimagedl.Pixel4a):
+	case makeSmallDeviceName(pixelimagedl.Pixel4a.String()):
 		return pixelimagedl.Pixel4a, true
-	case makeSmallDeviceName(pixelimagedl.Pixel4a5G):
+	case makeSmallDeviceName(pixelimagedl.Pixel4a5G.String()):
 		return pixelimagedl.Pixel4a5G, true
-	case makeSmallDeviceName(pixelimagedl.Pixel5):
+	case makeSmallDeviceName(pixelimagedl.Pixel5.String()):
 		return pixelimagedl.Pixel5, true
-	case makeSmallDeviceName(pixelimagedl.Pixel5a):
+	case makeSmallDeviceName(pixelimagedl.Pixel5a.String()):
 		return pixelimagedl.Pixel5a, true
-	case makeSmallDeviceName(pixelimagedl.Pixel6):
+	case makeSmallDeviceName(pixelimagedl.Pixel6.String()):
 		return pixelimagedl.Pixel6, true
-	case makeSmallDeviceName(pixelimagedl.Pixel6Pro):
+	case makeSmallDeviceName(pixelimagedl.Pixel6Pro.String()):
 		return pixelimagedl.Pixel6Pro, true
-	case makeSmallDeviceName(pixelimagedl.Flame):
+	case makeSmallDeviceName(pixelimagedl.Flame.String()):
 		return pixelimagedl.Pixel4, true
-	case makeSmallDeviceName(pixelimagedl.Coral):
+	case makeSmallDeviceName(pixelimagedl.Coral.String()):
 		return pixelimagedl.Pixel4XL, true
-	case makeSmallDeviceName(pixelimagedl.Sunfish):
+	case makeSmallDeviceName(pixelimagedl.Sunfish.String()):
 		return pixelimagedl.Pixel4a, true
-	case makeSmallDeviceName(pixelimagedl.Bramble):
+	case makeSmallDeviceName(pixelimagedl.Bramble.String()):
 		return pixelimagedl.Pixel4a5G, true
-	case makeSmallDeviceName(pixelimagedl.Redfin):
+	case makeSmallDeviceName(pixelimagedl.Redfin.String()):
 		return pixelimagedl.Pixel5, true
-	case makeSmallDeviceName(pixelimagedl.Barbet):
+	case makeSmallDeviceName(pixelimagedl.Barbet.String()):
 		return pixelimagedl.Pixel5a, true
-	case makeSmallDeviceName(pixelimagedl.Oriole):
+	case makeSmallDeviceName(pixelimagedl.Oriole.String()):
 		return pixelimagedl.Pixel6, true
-	case makeSmallDeviceName(pixelimagedl.Raven):
+	case makeSmallDeviceName(pixelimagedl.Raven.String()):
 		return pixelimagedl.Pixel6Pro, true
 	default:
 		return pixelimagedl.Unknown, false
 	}
 }
 
-var allowedDeviceNames = []string{
-	makeSmallDeviceName(pixelimagedl.Pixel4),
-	makeSmallDeviceName(pixelimagedl.Pixel4XL),
-	makeSmallDeviceName(pixelimagedl.Pixel4a),
-	makeSmallDeviceName(pixelimagedl.Pixel4a5G),
-	makeSmallDeviceName(pixelimagedl.Pixel5),
-	makeSmallDeviceName(pixelimagedl.Pixel5a),
-	makeSmallDeviceName(pixelimagedl.Pixel6),
-	makeSmallDeviceName(pixelimagedl.Pixel6Pro),
-	makeSmallDeviceName(pixelimagedl.Flame),
-	makeSmallDeviceName(pixelimagedl.Coral),
-	makeSmallDeviceName(pixelimagedl.Sunfish),
-	makeSmallDeviceName(pixelimagedl.Bramble),
-	makeSmallDeviceName(pixelimagedl.Redfin),
-	makeSmallDeviceName(pixelimagedl.Barbet),
-	makeSmallDeviceName(pixelimagedl.Oriole),
-	makeSmallDeviceName(pixelimagedl.Raven),
-}
+var allowedDeviceNames = internal.Map(pixelimagedl.AllDeviceNames, makeSmallDeviceName)
 
 func downloadCmdAction(c *cli.Context) error {
 	rawDeviceName := deviceNameFlag.Get(c)
