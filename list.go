@@ -1,6 +1,7 @@
 package pixelimagedl
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"regexp"
@@ -15,10 +16,10 @@ import (
 
 var httpClient = new(http.Client)
 
-func ScrapeDeviceImages(device Pixel, downloadType DownloadType) ([]PixelImage, error) {
+func ListDeviceImages(ctx context.Context, device Pixel, downloadType DownloadType) ([]PixelImage, error) {
 	codename := deviceCodenameMap[device]
 
-	data, err := scrapeData(codename, downloadType)
+	data, err := scrapeData(ctx, codename, downloadType)
 	if err != nil {
 		return nil, err
 	}
@@ -28,7 +29,7 @@ func ScrapeDeviceImages(device Pixel, downloadType DownloadType) ([]PixelImage, 
 	return data, nil
 }
 
-func scrapeData(codename Codename, downloadType DownloadType) ([]PixelImage, error) {
+func scrapeData(ctx context.Context, codename Codename, downloadType DownloadType) ([]PixelImage, error) {
 	var (
 		deviceImages []PixelImage
 		downloadUri  string
@@ -44,7 +45,7 @@ func scrapeData(codename Codename, downloadType DownloadType) ([]PixelImage, err
 		cookieData = internal.OTAAcksCookie
 	}
 
-	req, _ := http.NewRequest(http.MethodGet, downloadUri, nil)
+	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, downloadUri, nil)
 	req.Header.Set("cookie", cookieData)
 
 	resp, err := httpClient.Do(req)

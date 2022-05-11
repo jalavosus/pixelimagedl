@@ -1,6 +1,7 @@
 package pixelimagedl
 
 import (
+	"context"
 	"crypto/sha256"
 	"fmt"
 	"io"
@@ -9,14 +10,18 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/pkg/errors"
 
 	"github.com/jalavosus/pixelimagedl/pkg/download"
 )
 
-func DownloadLatest(device Pixel, downloadType DownloadType, outDir string) error {
-	images, err := ScrapeDeviceImages(device, downloadType)
+func DownloadLatest(ctx context.Context, device Pixel, downloadType DownloadType, outDir string) error {
+	listCtx, listCancel := context.WithTimeout(ctx, 30*time.Second)
+	defer listCancel()
+
+	images, err := ListDeviceImages(listCtx, device, downloadType)
 	if err != nil {
 		err = errors.WithMessagef(err, "error scraping available %[1]s images for device %[2]s", downloadType.String(), device.String())
 		return err
@@ -42,7 +47,9 @@ func DownloadLatest(device Pixel, downloadType DownloadType, outDir string) erro
 
 	log.Printf("downloading %[1]s image from %[2]s\n", downloadType.String(), downloadUri)
 
-	resp, err := http.Get(downloadUri)
+	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, downloadUri, nil)
+
+	resp, err := httpClient.Do(req)
 	if err != nil {
 		err = errors.WithMessagef(err, "error downloading file at url %[1]s", downloadUri)
 		return err

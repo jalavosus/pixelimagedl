@@ -1,7 +1,9 @@
 package main
 
 import (
-	"github.com/pkg/errors"
+	"context"
+	"time"
+
 	"github.com/urfave/cli/v2"
 
 	"github.com/jalavosus/pixelimagedl"
@@ -13,24 +15,14 @@ var listCmd = cli.Command{
 		&downloadTypeFlag,
 		&deviceNameFlag,
 	},
-	Action: listCmdAction,
+	Action: WithFlags(listCmdAction),
 }
 
-func listCmdAction(c *cli.Context) error {
-	rawDeviceName := deviceNameFlag.Get(c)
-	rawImageKind := downloadTypeFlag.Get(c)
+func listCmdAction(c *cli.Context, parsedFlags ParsedFlags) error {
+	ctx, cancel := context.WithTimeout(c.Context, 30*time.Second)
+	defer cancel()
 
-	deviceName, ok := validateDevice(rawDeviceName)
-	if !ok {
-		return errors.Errorf("invalid device name %[1]s", rawDeviceName)
-	}
-
-	downloadKind, ok := validateImageKind(rawImageKind)
-	if !ok {
-		return errors.Errorf("invalid download kind %[1]s", rawImageKind)
-	}
-
-	data, err := pixelimagedl.ScrapeDeviceImages(deviceName, downloadKind)
+	data, err := pixelimagedl.ListDeviceImages(ctx, parsedFlags.Device, parsedFlags.DownloadType)
 	if err != nil {
 		return err
 	}
