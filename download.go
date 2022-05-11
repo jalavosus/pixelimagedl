@@ -16,7 +16,7 @@ import (
 )
 
 func DownloadLatest(device Pixel, downloadType DownloadType, outDir string) error {
-	images, err := ScrapeFactoryImages(device, downloadType)
+	images, err := ScrapeDeviceImages(device, downloadType)
 	if err != nil {
 		err = errors.WithMessagef(err, "error scraping available %[1]s images for device %[2]s", downloadType.String(), device.String())
 		return err
@@ -56,13 +56,11 @@ func DownloadLatest(device Pixel, downloadType DownloadType, outDir string) erro
 
 	log.Printf("saved %-.1[1]fGb to %[2]s", download.GbFromBytes(numBytes), filename)
 
-	log.Printf("checking SHA256 sum of %[1]s (expecting %[2]s)\n", filename, latest.SHA256Sum)
-
 	gotSha, shaMatch := checkSha(filename, latest.SHA256Sum)
 	if !shaMatch {
 		return errors.Errorf("SHA256 mismatch; expected %[1]s, sum of downloaded file is %[2]s", latest.SHA256Sum, gotSha)
 	} else {
-		log.Printf("SHA256 sum %[1]s matches\n", gotSha)
+		log.Printf("SHA256 sum %[1]s of downloaded file matches expected\n", gotSha)
 	}
 
 	return nil

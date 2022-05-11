@@ -36,7 +36,7 @@ const (
 	Raven                   // raven
 )
 
-var DeviceCodenameMap = map[Pixel]Codename{
+var deviceCodenameMap = map[Pixel]Codename{
 	Pixel4:    Flame,
 	Pixel4XL:  Coral,
 	Pixel4a:   Sunfish,

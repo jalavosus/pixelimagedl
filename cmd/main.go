@@ -171,7 +171,7 @@ func listCmdAction(c *cli.Context) error {
 		return errors.Errorf("invalid download kind %[1]s", rawImageKind)
 	}
 
-	data, err := pixelimagedl.ScrapeFactoryImages(deviceName, downloadKind)
+	data, err := pixelimagedl.ScrapeDeviceImages(deviceName, downloadKind)
 	if err != nil {
 		return err
 	}

@@ -9,10 +9,14 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/pkg/errors"
+
+	"github.com/jalavosus/pixelimagedl/internal"
 )
 
-func ScrapeFactoryImages(device Pixel, downloadType DownloadType) ([]FactoryImage, error) {
-	codename := DeviceCodenameMap[device]
+var httpClient = new(http.Client)
+
+func ScrapeDeviceImages(device Pixel, downloadType DownloadType) ([]PixelImage, error) {
+	codename := deviceCodenameMap[device]
 
 	data, err := scrapeData(codename, downloadType)
 	if err != nil {
@@ -24,22 +28,20 @@ func ScrapeFactoryImages(device Pixel, downloadType DownloadType) ([]FactoryImag
 	return data, nil
 }
 
-var httpClient = new(http.Client)
-
-func scrapeData(codename Codename, downloadType DownloadType) ([]FactoryImage, error) {
+func scrapeData(codename Codename, downloadType DownloadType) ([]PixelImage, error) {
 	var (
-		factoryImages []FactoryImage
-		downloadUri   string
-		cookieData    string
+		deviceImages []PixelImage
+		downloadUri  string
+		cookieData   string
 	)
 
 	switch downloadType {
 	case Factory:
-		downloadUri = StableFactoryImagesURL
-		cookieData = FactoryAcksCookie
+		downloadUri = internal.StableFactoryImagesURL
+		cookieData = internal.FactoryAcksCookie
 	case OTA:
-		downloadUri = StableOTAImagesURL
-		cookieData = OTAAcksCookie
+		downloadUri = internal.StableOTAImagesURL
+		cookieData = internal.OTAAcksCookie
 	}
 
 	req, _ := http.NewRequest(http.MethodGet, downloadUri, nil)
@@ -47,7 +49,7 @@ func scrapeData(codename Codename, downloadType DownloadType) ([]FactoryImage, e
 
 	resp, err := httpClient.Do(req)
 	if err != nil {
-		err = errors.WithMessagef(err, "error requesting url %[1]s", StableFactoryImagesURL)
+		err = errors.WithMessagef(err, "error requesting url %[1]s", downloadUri)
 		return nil, err
 	}
 
@@ -66,9 +68,10 @@ func scrapeData(codename Codename, downloadType DownloadType) ([]FactoryImage, e
 		fmt.Println(pageBody.Text())
 		return nil, nil
 	}
-	factoryImages = parseRows(deviceTable, downloadType)
 
-	return factoryImages, nil
+	deviceImages = parseRows(deviceTable, downloadType)
+
+	return deviceImages, nil
 }
 
 func findDeviceTable(codename Codename, pageBody *goquery.Document) *goquery.Selection {
@@ -92,11 +95,11 @@ func findDeviceTable(codename Codename, pageBody *goquery.Document) *goquery.Sel
 	return deviceTable
 }
 
-func parseRows(tableBody *goquery.Selection, downloadType DownloadType) []FactoryImage {
-	var parsed []FactoryImage
+func parseRows(tableBody *goquery.Selection, downloadType DownloadType) []PixelImage {
+	var parsed []PixelImage
 
 	tableBody.Find("tr").Each(func(idx int, s *goquery.Selection) {
-		imageData := FactoryImage{}
+		imageData := PixelImage{}
 
 		rowData := s.Find("td")
 		fullBuild := rowData.First()
@@ -147,7 +150,7 @@ func parseVersionString(buildNum string) (version, buildNumber, buildDate, build
 	return
 }
 
-func sortDataSlice(data []FactoryImage) []FactoryImage {
+func sortDataSlice(data []PixelImage) []PixelImage {
 	sort.Slice(data, func(i, j int) bool {
 		majorI, minorI, extraI := getBuildMajorMinor(data[i].BuildNumber)
 		majorJ, minorJ, extraJ := getBuildMajorMinor(data[j].BuildNumber)

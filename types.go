@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-type FactoryImage struct {
+type PixelImage struct {
 	Version      string `json:"version" yaml:"version"`
 	BuildNumber  string `json:"build_number" yaml:"build_number"`
 	BuildDate    string `json:"build_date" yaml:"build_date"`
@@ -14,7 +14,7 @@ type FactoryImage struct {
 	SHA256Sum    string `json:"sha256_sum" yaml:"sha256_sum"`
 }
 
-func (f FactoryImage) PrettyPrint() {
+func (f PixelImage) PrettyPrint() {
 	d, _ := json.MarshalIndent(f, "", "  ")
 	fmt.Println(string(d))
 }
