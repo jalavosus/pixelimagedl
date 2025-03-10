@@ -1,25 +1,30 @@
 package main
 
 import (
+	"context"
 	"log"
 	"os"
 
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
+)
+
+var (
+	author = map[string]string{"Name": "jalavosus", "Email": "alavosus.james@gmail.com"}
 )
 
 func main() {
-	app := &cli.App{
-		Name: "pixel image downloader",
-		Authors: []*cli.Author{
-			{Name: "jalavosus", Email: "alavosus.james@gmail.com"},
-		},
+	app := &cli.Command{
+		Name:    "pixelimagedl",
+		Authors: []any{author},
 		Commands: []*cli.Command{
 			&downloadCmd,
 			&listCmd,
 		},
 	}
 
-	if err := app.Run(os.Args); err != nil {
+	ctx := context.TODO()
+
+	if err := app.Run(ctx, os.Args); err != nil {
 		log.Fatal(err)
 	}
 }

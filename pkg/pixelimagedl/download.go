@@ -48,13 +48,19 @@ func DownloadLatest(ctx context.Context, device Pixel, downloadType DownloadType
 
 	log.Printf("downloading %[1]s image from %[2]s\n", downloadType.String(), downloadUri)
 
-	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, downloadUri, nil)
+	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, downloadUri, http.NoBody)
 
-	resp, err := httpClient.Do(req)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		err = errors.WithMessagef(err, "error downloading file at url %[1]s", downloadUri)
 		return err
 	}
+
+	defer func() {
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			log.Printf("error closing file download body: %v\n", closeErr)
+		}
+	}()
 
 	log.Printf("saving %[1]s image to %[2]s\n", downloadType.String(), filename)
 	numBytes, err := download.ReadData(resp, filename, dlBufSize())

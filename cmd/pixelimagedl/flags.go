@@ -1,11 +1,12 @@
 package main
 
 import (
+	"context"
 	"strings"
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 
 	"github.com/jalavosus/pixelimagedl/pkg/pixelimagedl"
 )
@@ -30,7 +31,7 @@ var (
 		Value:    15 * time.Minute,
 		Required: false,
 	}
-	outDirFlag = cli.PathFlag{
+	outDirFlag = cli.StringFlag{
 		Name:     "outdir",
 		Usage:    "`dir`ectory to place downloaded image file in",
 		Aliases:  []string{"o"},
@@ -46,22 +47,22 @@ type ParsedFlags struct {
 	DownloadType    pixelimagedl.DownloadType
 }
 
-func WithFlags(fn func(*cli.Context, ParsedFlags) error) cli.ActionFunc {
-	return func(c *cli.Context) error {
-		parsedFlags, flagsErr := parseFlags(c)
+func WithFlags(fn func(context.Context, ParsedFlags) error) cli.ActionFunc {
+	return func(ctx context.Context, command *cli.Command) error {
+		parsedFlags, flagsErr := parseFlags(command)
 		if flagsErr != nil {
 			return flagsErr
 		}
 
-		return fn(c, parsedFlags)
+		return fn(ctx, parsedFlags)
 	}
 }
 
-func parseFlags(c *cli.Context) (ParsedFlags, error) {
+func parseFlags(cmd *cli.Command) (ParsedFlags, error) {
 	var parsedFlags ParsedFlags
 
-	rawDeviceName := deviceNameFlag.Get(c)
-	rawImageKind := downloadTypeFlag.Get(c)
+	rawDeviceName := cmd.String(deviceNameFlag.Name)
+	rawImageKind := cmd.String(downloadTypeFlag.Name)
 
 	deviceName, ok := validateDevice(rawDeviceName)
 	if !ok {
@@ -73,8 +74,8 @@ func parseFlags(c *cli.Context) (ParsedFlags, error) {
 		return parsedFlags, errors.Errorf("invalid download kind %[1]s. Allowed values: %[2]s", rawImageKind, strings.Join(allowedDownloadTypes, ", "))
 	}
 
-	downloadTimeout := downloadTimeoutFlag.Get(c)
-	outDir := outDirFlag.Get(c)
+	downloadTimeout := cmd.Duration(downloadTimeoutFlag.Name)
+	outDir := cmd.String(outDirFlag.Name)
 
 	parsedFlags = ParsedFlags{
 		Device:          deviceName,

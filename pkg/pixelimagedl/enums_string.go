@@ -17,11 +17,24 @@ func _() {
 	_ = x[Pixel5a-6]
 	_ = x[Pixel6-7]
 	_ = x[Pixel6Pro-8]
+	_ = x[Pixel6a-9]
+	_ = x[Pixel7-10]
+	_ = x[Pixel7Pro-11]
+	_ = x[Pixel7a-12]
+	_ = x[PixelTablet-13]
+	_ = x[PixelFold-14]
+	_ = x[Pixel8-15]
+	_ = x[Pixel8Pro-16]
+	_ = x[Pixel8a-17]
+	_ = x[Pixel9-18]
+	_ = x[Pixel9Pro-19]
+	_ = x[Pixel9ProXL-20]
+	_ = x[Pixel9ProFold-21]
 }
 
-const _Pixel_name = "unknownPixel 4Pixel 4 XLPixel 4aPixel 4a 5GPixel 5Pixel 5aPixel 6Pixel 6 Pro"
+const _Pixel_name = "unknownPixel 4Pixel 4 XLPixel 4aPixel 4a 5GPixel 5Pixel 5aPixel 6Pixel 6 ProPixel 6aPixel 7Pixel 7 ProPixel 7aPixel TabletPixel FoldPixel 8Pixel 8 ProPixel 8aPixel 9Pixel 9 ProPixel 9 Pro XLPixel 9 Pro Fold"
 
-var _Pixel_index = [...]uint8{0, 7, 14, 24, 32, 43, 50, 58, 65, 76}
+var _Pixel_index = [...]uint8{0, 7, 14, 24, 32, 43, 50, 58, 65, 76, 84, 91, 102, 110, 122, 132, 139, 150, 158, 165, 176, 190, 206}
 
 func (i Pixel) String() string {
 	if i >= Pixel(len(_Pixel_index)-1) {
@@ -42,11 +55,24 @@ func _() {
 	_ = x[Barbet-6]
 	_ = x[Oriole-7]
 	_ = x[Raven-8]
+	_ = x[Bluejay-9]
+	_ = x[Panther-10]
+	_ = x[Cheetah-11]
+	_ = x[Lynx-12]
+	_ = x[TangorPro-13]
+	_ = x[Felix-14]
+	_ = x[Shiba-15]
+	_ = x[Husky-16]
+	_ = x[Akita-17]
+	_ = x[Tokay-18]
+	_ = x[Caiman-19]
+	_ = x[Komodo-20]
+	_ = x[Comet-21]
 }
 
-const _Codename_name = "unknownflamecoralsunfishbrambleredfinbarbetorioleraven"
+const _Codename_name = "unknownflamecoralsunfishbrambleredfinbarbetorioleravenbluejaypanthercheetahlynxtangorprofelixshibahuskyakitatokaycaimankomodocomet"
 
-var _Codename_index = [...]uint8{0, 7, 12, 17, 24, 31, 37, 43, 49, 54}
+var _Codename_index = [...]uint8{0, 7, 12, 17, 24, 31, 37, 43, 49, 54, 61, 68, 75, 79, 88, 93, 98, 103, 108, 113, 119, 125, 130}
 
 func (i Codename) String() string {
 	if i >= Codename(len(_Codename_index)-1) {

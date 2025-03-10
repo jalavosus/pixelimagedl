@@ -26,7 +26,7 @@ type PixelImage struct {
 	SHA256Sum    string `json:"sha256_sum" yaml:"sha256_sum" pp:"sha256_sum"`
 }
 
-func (f PixelImage) PrettyPrint() {
+func (f *PixelImage) PrettyPrint() {
 	out := new(bytes.Buffer)
 	_, _ = pp.Fprint(out, f)
 

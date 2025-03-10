@@ -21,10 +21,3 @@ lint :
 fmt :
 	gofmt -s -w ./
 
-.PHONY: mod-download mod-tidy
-
-mod-download :
-	$(GO) mod download
-
-mod-tidy :
-	$(GO) mod tidy

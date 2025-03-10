@@ -3,6 +3,7 @@ package pixelimagedl
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"regexp"
 	"sort"
@@ -13,8 +14,6 @@ import (
 
 	"github.com/jalavosus/pixelimagedl/internal"
 )
-
-var httpClient = new(http.Client)
 
 func ListDeviceImages(ctx context.Context, device Pixel, downloadType DownloadType) ([]PixelImage, error) {
 	codename := deviceCodenameMap[device]
@@ -45,17 +44,19 @@ func scrapeData(ctx context.Context, codename Codename, downloadType DownloadTyp
 		cookieData = internal.OTAAcksCookie
 	}
 
-	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, downloadUri, nil)
+	req, _ := http.NewRequestWithContext(ctx, http.MethodGet, downloadUri, http.NoBody)
 	req.Header.Set("cookie", cookieData)
 
-	resp, err := httpClient.Do(req)
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		err = errors.WithMessagef(err, "error requesting url %[1]s", downloadUri)
 		return nil, err
 	}
 
 	defer func() {
-		_ = resp.Body.Close()
+		if closeErr := resp.Body.Close(); closeErr != nil {
+			log.Printf("error closing file download body: %v\n", closeErr)
+		}
 	}()
 
 	pageBody, err := goquery.NewDocumentFromReader(resp.Body)
@@ -172,9 +173,7 @@ func sortDataSlice(data []PixelImage) []PixelImage {
 	return data
 }
 
-func getBuildMajorMinor(buildNumber string) (int64, int64, string) {
-	var extra string
-
+func getBuildMajorMinor(buildNumber string) (major, minor int64, extra string) {
 	split := strings.Split(buildNumber, ".")
 	majorStr := split[1]
 	minorStr := split[2]
@@ -182,8 +181,8 @@ func getBuildMajorMinor(buildNumber string) (int64, int64, string) {
 		extra = split[3]
 	}
 
-	major := internal.ParseInt64(majorStr)
-	minor := internal.ParseInt64(minorStr)
+	major = internal.ParseInt64(majorStr)
+	minor = internal.ParseInt64(minorStr)
 
-	return major, minor, extra
+	return
 }

@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/urfave/cli/v2"
+	"github.com/urfave/cli/v3"
 
 	"github.com/jalavosus/pixelimagedl/pkg/pixelimagedl"
 )
@@ -18,8 +18,8 @@ var listCmd = cli.Command{
 	Action: WithFlags(listCmdAction),
 }
 
-func listCmdAction(c *cli.Context, parsedFlags ParsedFlags) error {
-	ctx, cancel := context.WithTimeout(c.Context, 30*time.Second)
+func listCmdAction(ctx context.Context, parsedFlags ParsedFlags) error {
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 
 	data, err := pixelimagedl.ListDeviceImages(ctx, parsedFlags.Device, parsedFlags.DownloadType)

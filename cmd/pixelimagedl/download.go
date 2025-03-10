@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 
-	"github.com/urfave/cli/v2"
+	cli "github.com/urfave/cli/v3"
 
 	"github.com/jalavosus/pixelimagedl/pkg/pixelimagedl"
 )
@@ -19,8 +19,8 @@ var downloadCmd = cli.Command{
 	Action: WithFlags(downloadCmdAction),
 }
 
-func downloadCmdAction(c *cli.Context, parsedFlags ParsedFlags) error {
-	ctx, cancel := context.WithTimeout(c.Context, parsedFlags.DownloadTimeout)
+func downloadCmdAction(ctx context.Context, parsedFlags ParsedFlags) error {
+	ctx, cancel := context.WithTimeout(ctx, parsedFlags.DownloadTimeout)
 	defer cancel()
 
 	return pixelimagedl.DownloadLatest(

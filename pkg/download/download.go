@@ -18,18 +18,12 @@ const (
 // desired buffer size.
 // Returns number of bytes written to file and any error returned
 func ReadData(r *http.Response, outFile string, bufSizeBytes int) (int64, error) {
-	var closeErr error
-
-	defer func() {
-		closeErr = r.Body.Close()
-	}()
-
 	numBytes, err := readData(r.Body, outFile, r.ContentLength, bufSizeBytes)
 	if err != nil {
 		return numBytes, err
 	}
 
-	return numBytes, closeErr
+	return numBytes, nil
 }
 
 func readData(r io.Reader, outFile string, contentLen int64, bufSizeBytes int) (int64, error) {
